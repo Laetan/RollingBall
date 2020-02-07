@@ -27,8 +27,8 @@ public class PlayerControl : MonoBehaviour
         float leftMove = Input.GetAxis("BarLeft") * Speed;
         float rightMove = Input.GetAxis("BarRight") * Speed;
 
-        leftPosition += leftMove;
-        rightPosition += rightMove;
+		leftPosition = Math.Max(leftPosition + leftMove , -5 );
+		rightPosition = Math.Max(rightPosition + rightMove,  -5 );
         double rotation = Math.Atan((leftPosition - rightPosition) / zoneSize) * 180 / Math.PI;
         //Debug.Log(rotation.ToString("0.000") );
         body.MovePosition(new Vector2(xOffset, leftPosition));
