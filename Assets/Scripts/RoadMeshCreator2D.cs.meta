@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3c08941fdbc42c540b495eb1419d7f4c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pathCreator: {instanceID: 0}
+  - roadMaterial: {fileID: 2100000, guid: b5df4735192845740bd11076dc9cdc99, type: 2}
+  - meshHolder: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
