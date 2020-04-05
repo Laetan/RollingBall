@@ -2,10 +2,11 @@
 using PathCreation.Utility;
 using UnityEngine;
 
-namespace PathCreation.Examples {
-    public class RoadMeshCreator2D : PathSceneTool {
+namespace PathCreation.Tools {
+    public class RoadMeshCreator2D : PathCreation.Examples.PathSceneTool
+    {
         [Header ("Road settings")]
-        public float roadWidth = .4f;
+        public float roadWidth = 1f;
 
         [Header ("Material settings")]
         public Material roadMaterial;
@@ -26,6 +27,11 @@ namespace PathCreation.Examples {
             }
         }
 
+        protected virtual float getCurrentRoadWidth(float progression)
+        {
+            return roadWidth;
+        }
+
         void CreateRoadMesh () {
             Vector3[] verts = new Vector3[path.NumPoints * 2];
             Vector2[] uvs = new Vector2[verts.Length];
@@ -41,9 +47,10 @@ namespace PathCreation.Examples {
             for (int i = 0; i < path.NumPoints; i++) {
                 Vector3 localRight = path.GetNormal(i);
 
+                float currentRoadWidth = getCurrentRoadWidth((float)i / (float)path.NumPoints);
                 // Find position to left and right of current path vertex
-                Vector3 vertSideA = path.GetPoint (i) - localRight * Mathf.Abs (roadWidth);
-                Vector3 vertSideB = path.GetPoint (i) + localRight * Mathf.Abs (roadWidth);
+                Vector3 vertSideA = path.GetPoint (i) - localRight * Mathf.Abs (currentRoadWidth);
+                Vector3 vertSideB = path.GetPoint (i) + localRight * Mathf.Abs (currentRoadWidth);
 
                 // Add top of road vertices
                 verts[vertIndex] = vertSideA;

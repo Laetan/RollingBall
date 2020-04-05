@@ -2,22 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PathCreation.Examples
+namespace PathCreation.Tools
 {
-    public class SimpleEdgeCreator : PathSceneTool
+    public class SimpleEdgeCreator : PathCreation.Examples.PathSceneTool
     {
         enum Side { left, right };
         //public PathCreator pathCreator;
         public bool createLeftEdge;
         public bool createRightEdge;
-        public float roadWidth = .4f;
+        public float roadWidth = 1f;
         public float edgeWidth = .05f;
 
         GameObject leftEdge;
         GameObject rightEdge;
 
+        Mesh mesh;
+
         override protected void PathUpdated()
         {
+            if (pathCreator != null && mesh == null)
+            {
+                mesh = pathCreator.GetComponentInChildren<MeshFilter>().sharedMesh;
+            }
             if (createRightEdge)
             {
                 if (rightEdge == null)
@@ -31,6 +37,11 @@ namespace PathCreation.Examples
                     rightEdge.AddComponent<RoadMeshColliderCreator2D>();
                 }
                 CreateEdgePath(Side.right);
+            }
+            else if(rightEdge != null)
+            {
+                DestroyImmediate(rightEdge);
+                rightEdge = null;
             }
             if (createLeftEdge)
             {
@@ -47,17 +58,23 @@ namespace PathCreation.Examples
                 }
                 CreateEdgePath(Side.left);
             }
+            else if (leftEdge != null){
+                DestroyImmediate(leftEdge);
+                leftEdge = null;
+            }
+
+            
 
         }
-
-
-
+        
         void CreateEdgePath(Side side)
         {
-            Vector2[] sidePoints = new Vector2[pathCreator.path.NumPoints];
-            for (int i = 0; i < pathCreator.path.NumPoints; i++)
+
+            Vector3[] vertices = mesh.vertices;
+            Vector2[] sidePoints = new Vector2[mesh.vertexCount / 2];
+            for (int i = 0, v = (side == Side.left ? 0 : 1); v < mesh.vertexCount; i++, v += 2)
             {
-                sidePoints[i] = pathCreator.path.GetPoint(i) + (side == Side.right ? 1 : -1) * pathCreator.path.GetNormal(i) * Mathf.Abs(roadWidth);
+                sidePoints[i] = vertices[v];
             }
 
             BezierPath sidePath = new BezierPath(sidePoints, false, PathSpace.xy);
